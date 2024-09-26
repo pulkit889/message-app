@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                     sh "aws eks update-kubeconfig --region $AWS_REGION --name message-app-eks-cluster"
-                    sh "kubectl apply -f k8s-manifests/app/"
+                    sh "kubectl set image deployment/message-service message-service=$DOCKER_IMAGE"
                     sh "kubectl rollout status deployment/message-service --namespace=default"
                 }
             }
