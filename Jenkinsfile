@@ -45,7 +45,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    aws eks update-kubeconfig --region $AWS_REGION --name message-app-eks-cluster
+                    sh "aws eks update-kubeconfig --region $AWS_REGION --name message-app-eks-cluster"
                     sh "kubectl apply -f k8s-menifests/deployment.yml"
                     sh "kubectl rollout status deployment/message-service --namespace=default"
                 }
