@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout code from the repository
-                git 'https://github.com/your-repo/your-flask-app.git'
+                git 'https://github.com/pulkit889/message-app.git
             }
         }
 
@@ -29,43 +29,25 @@ pipeline {
             }
         }
 
-        stage('Login to AWS ECR') {
+        stage('Build and Push Image') {
             steps {
                 script {
-                    // Use AWS CLI to log in to the ECR registry
                     sh '''
                     aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+                    docker build -t $DOCKER_IMAGE -f app/Dockerfile app
+                    docker push $DOCKER_IMAGE
                     '''
                 }
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    // Build the Docker image
-                    docker.build("${DOCKER_IMAGE}")
-                }
-            }
-        }
-
-        stage('Push Docker Image to ECR') {
-            steps {
-                script {
-                    // Push the Docker image to ECR
-                    docker.withRegistry("https://${ECR_REGISTRY}", '') {
-                        docker.image("${DOCKER_IMAGE}").push()
-                    }
-                }
-            }
-        }
 
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Apply Kubernetes manifest for deployment
-                    sh "kubectl apply -f k8s/deployment.yaml"
-                    sh "kubectl rollout status deployment/flask-app --namespace=default"
+                    aws eks update-kubeconfig --region $AWS_REGION --name message-app-eks-cluster
+                    sh "kubectl apply -f k8s-menifests/deployment.yml"
+                    sh "kubectl rollout status deployment/message-service --namespace=default"
                 }
             }
         }

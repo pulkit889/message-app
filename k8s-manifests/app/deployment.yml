@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: message-service
-          image: 135808944307.dkr.ecr.ap-south-1.amazonaws.com/message-app:latest
+          image: 135808944307.dkr.ecr.ap-south-1.amazonaws.com/message-app:${IMAGE_TAG}
           ports:
             - containerPort: 5000
           resources:
