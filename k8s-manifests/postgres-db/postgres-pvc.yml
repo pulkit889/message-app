@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce # Only one node can mount this volume in read/write mode
+  resources:
+    requests:
+      storage: 10Gi # Request 10Gi of storage
+  storageClassName: postgres-storage-class # Reference to the StorageClass
