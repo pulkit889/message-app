@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout code from the repository
-                git 'https://github.com/pulkit889/message-app.git
+                git 'https://github.com/pulkit889/message-app.git'
             }
         }
 
